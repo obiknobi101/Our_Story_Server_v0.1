@@ -63,7 +63,7 @@ public class Story_Protocol {
 
     
     public String processInput(String theInput){
-    	
+    	System.out.println(theInput);
     	return theInput;
     }
     

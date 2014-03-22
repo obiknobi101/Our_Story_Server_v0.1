@@ -1,37 +1,31 @@
 package Server;
+
 import java.net.*;
 import java.io.*;
 
 public class Server_Thread extends Thread {
-    private Socket socket = null;
+	private Socket socket = null;
 
-    public Server_Thread(Socket socket) {
-        super("Server_Thread");
-        this.socket = socket;
-    }
-    
-    public void run() {
+	public Server_Thread(Socket socket) {
+		super("Server_Thread");
+		this.socket = socket;
+	}
 
-        try (
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(
-                new InputStreamReader(
-                    socket.getInputStream()));
-        ) {
-            String inputLine, outputLine;
-            Story_Protocol kkp = new Story_Protocol();
-            outputLine = kkp.processInput(null);
-            out.println(outputLine);
-
-            while ((inputLine = in.readLine()) != null) {
-                outputLine = kkp.processInput(inputLine);
-                out.println(outputLine);
-                if (outputLine.equals("Bye"))
-                    break;
-            }
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public void run() {
+		System.out.println("Thread started");
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(
+				socket.getInputStream()));) {
+			System.out.println("input stream opened");
+			String inputLine = in.readLine();
+			System.out.println("Client: " + inputLine);
+			if (inputLine.equals("Bye")) {
+				Server_Starter.listening = false;
+			}
+			in.close();
+			socket.close();
+			this.interrupt();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

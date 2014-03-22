@@ -1,25 +1,29 @@
 package Server;
+
 import java.net.*;
 import java.io.*;
 
 public class Server_Starter {
-    public static void main(String[] args) throws IOException {
+	public static boolean listening = true;
 
-    if (args.length != 1) {
-        System.err.println("Usage: java KKMultiServer <port number>");
-        System.exit(1);
-    }
+	public static void main(String[] args) throws IOException {
 
-        int portNumber = Integer.parseInt(args[0]);
-        boolean listening = true;
-        
-        try (ServerSocket serverSocket = new ServerSocket(portNumber)) { 
-            while (listening) {
-	            new Server_Thread(serverSocket.accept()).start();
-	        }
-	    } catch (IOException e) {
-            System.err.println("Could not listen on port " + portNumber);
-            System.exit(-1);
-        }
-    }
+		if (args.length != 1) {
+			System.err.println("Usage: java KKMultiServer <port number>");
+			System.exit(1);
+		}
+
+		int portNumber = Integer.parseInt(args[0]);
+
+		try (ServerSocket serverSocket = new ServerSocket(44441)) {
+			System.out.println("Socket created: ");
+			while (listening) {
+				new Server_Thread(serverSocket.accept()).start();
+				
+			}
+		} catch (IOException e) {
+			System.err.println("Could not listen on port " + portNumber);
+			System.exit(-1);
+		}
+	}
 }
